@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){
   res.locals.error = req.flash('error').toString() || '';
   res.locals.success = req.flash('success').toString() || '';
+  res.locals.user = req.session.user;
   next();
 });
 
