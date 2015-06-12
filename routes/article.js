@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var DateUtil = require('../util/DateUtil');
-var Article = require('../model/Article'); 
+var Article = require('../model/Article');
+var settings = require('../settings');
 
 router.get('/add', function(req, res, next) {
     res.render('article/add',{
@@ -44,6 +45,79 @@ router.post('/add',function(req,res, next){
     		req.flash('success','发表成功');
     		res.redirect('/');
     	}
+    });
+});
+
+router.get('/list/:pageNum/:pageSize',function(req,res,next){
+    var num = req.params.pageNum;
+    var size = req.params.pageSize;
+    var pageNum = num && num > 0 ? parseInt(num) : 1;
+    var pageSize = size && size > 0 ? parseInt(size) : settings.pageSize;
+    var query = {};
+    var searchBtn = req.query.searchBtn;
+    if(searchBtn){
+        req.session.keyword = req.query.keyword;
+    }
+
+    if(req.session.keyword){
+        var pattern = new RegExp(req.session.keyword,'i');
+        query['title'] = pattern;
+    }
+
+    Article.pageQuery(query,{pageNum:pageNum,pageSize:pageSize},function(err,count,articles){
+        if(err){
+            next(err);
+        }else{
+            var totalPage = Math.ceil(count/pageSize);
+            res.render('index',{
+                pageNum: pageNum,
+                pageSize: pageSize,
+                totalPage: totalPage,
+                articles: articles
+            });
+        }
+    })
+});
+
+router.get('/view/:articleId',function(req,res,next){
+    Article.findById(req.params.articleId,function(err,article){
+        res.render('article/view',{
+            article:article
+        });
+    })
+});
+
+router.get('/edit/:articleId',function(req,res,next){
+    Article.findById(req.params.articleId,function(err,article){
+        res.render('article/add',{
+            cmd:'edit',
+            article: article
+        });
+    });
+});
+
+router.post('/edit',function(req,res,next){
+    var content = req.body.content,
+        updateTime = DateUtil.getTime();
+
+    if(!content){
+        req.flash('error','内容不能为空哦！');
+        return res.redirect('back');
+    }
+
+    var newArticle = new Article({
+        content:content,
+        updateTime:updateTime
+    });
+
+    newArticle.update(req.body._id,function(err){
+        if(err){
+            req.flash('error',err);
+            return res.redirect('back');
+        }else{
+            req.flash('success','更新文章成功');
+            res.redirect('/article/view/' + req.body._id);
+        }
     });
 });
 

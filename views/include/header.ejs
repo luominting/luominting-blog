@@ -23,9 +23,7 @@
                 if(user){
                 %>
                 <li><a href="/article/add">发表文章</a></li>
-                <li><a href="/article/upload">上传图片</a></li>
                 <li><a href="/article/tags">标签</a></li>
-                <li><a href="/article/links">友情链接</a></li>
                 <li><a href="/users/logout">退出</a></li>
                 <%
                 }else{
@@ -38,7 +36,7 @@
             </ul>
             <form class="navbar-form navbar-right" role="search" method="get" action="/article/list/1/0">
                 <div class="form-group">
-                    <input type="txt" name="keyword" class="form-control" value="nn" placeholder="请输入查询关键字">
+                    <input type="txt" name="keyword" class="form-control" value="<%-keyword%>" placeholder="请输入查询关键字">
                 </div>
                 <button type="submit" class="btn btn-default" value="search" name="searchBtn">搜索</button>
             </form>

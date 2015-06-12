@@ -1,4 +1,5 @@
 var mongoose = require('../db');
+var markdown = require('markdown').markdown;
 
 var CommentSchema = new mongoose.Schema({
 	userId: {type:mongoose.Schema.ObjectId,ref:'User'},
@@ -44,6 +45,48 @@ Article.prototype.save = function(callback){
 			callback(null,article)
 		}
 	})
+};
+
+Article.prototype.update = function(_id,callback){
+	articleModel.update({_id:_id},{$set:{content:this.content,updateTime:this.updateTime}},function(err,article){
+		if(err){
+			return callback(err);
+		}else{
+			return callback(null,article);
+		}
+	});
+};
+
+Article.pageQuery = function(query,pageInfo,callback){
+	// count 查询当前集合的数据条数
+	articleModel.count(query,function(err,count){
+		var queryCursor = articleModel.find(query).sort({'createTime.minute':-1});
+		if(pageInfo && pageInfo.pageNum){
+			queryCursor = queryCursor.skip((pageInfo.pageNum-1)*pageInfo.pageSize).limit(pageInfo.pageSize);
+		}
+
+		queryCursor.populate('userId').exec(function(err,articles){
+			if(err){
+				callback(err);
+			}else{
+				callback(err,count,articles);
+			}
+		});
+
+	});
+};
+
+Article.findById = function(_id,callback){
+	articleModel.findOne({_id:_id}).populate('userId').populate('comments.userId').exec(function(err,article){
+		if(err){
+			return callback(err);
+		}else{
+			article.content = markdown.toHTML(article.content);
+			articleModel.update({_id:_id},{$inc:{'pv':1}},function(err){
+				callback(err,article);
+			});
+		}
+	});
 };
 
 module.exports = Article;
