@@ -1,0 +1,30 @@
+<%- include ../include/header%>
+<form action="/article/<%=cmd%>" method="post" role="form" class="form-horizontal">
+    <input type="hidden" name="_id" value="<%=article._id%>">
+    <div class="form-group">
+        <label class="col-md-2 control-label">标题:</label>
+        <div class="col-md-8">
+            <input type="text" name="title" class="form-control" value="<%=article.title%>" placeholder="请输入文章标题">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">正文:</label>
+        <div class="col-md-8">
+            <textarea name="content" rows="20" cols="100" class="form-control"  placeholder="请输入正文"><%=article.content%></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">标签:</label>
+        <div class="col-md-8">
+            标签1<input type="text" name="tag1" class="form-control" value="<%=article.tag1%>">
+            标签2<input type="text" name="tag2" class="form-control" value="<%=article.tag2%>">
+            标签3<input type="text" name="tag3" class="form-control" value="<%=article.tag3%>">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-8">
+            <button type="submit" class="btn btn-default">发表文章</button>
+        </div>
+    </div>
+</form>
+<%- include ../include/footer%>

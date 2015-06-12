@@ -4,7 +4,10 @@ var favicon = require('serve-favicon');  //收藏图标中间件
 var logger = require('morgan');         //日志中间件
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require('express-session');
+var session = require('express-session');    //依赖cookie
+var MongoStore = require('connect-mongo')(session);  //将session存在数据库  依赖session
+var settings = require('./settings');
+var forbidden = require('./middleware/forbidden');
 
 var flash = require('connect-flash');
 
@@ -17,8 +20,18 @@ app.use(session({
   secret: 'min-blog',
   resave:false,
   saveUninitialized:false,
+  store:new MongoStore({
+    db: settings.mongoConfig.db,
+    host: settings.mongoConfig.host,
+    port: settings.mongoConfig.port
+  })
 }));
 app.use(flash());
+
+app.use(forbidden({
+  mustLogin:['/users/logout','/article/add'],
+  mustNotLogin:['/users/reg','/users/login']
+}));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
