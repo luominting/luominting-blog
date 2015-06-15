@@ -60,7 +60,7 @@ Article.prototype.update = function(_id,callback){
 Article.pageQuery = function(query,pageInfo,callback){
 	// count 查询当前集合的数据条数
 	articleModel.count(query,function(err,count){
-		var queryCursor = articleModel.find(query).sort({'createTime.minute':-1});
+		var queryCursor = articleModel.find(query).sort({'createTime.ts':-1});
 		if(pageInfo && pageInfo.pageNum){
 			queryCursor = queryCursor.skip((pageInfo.pageNum-1)*pageInfo.pageSize).limit(pageInfo.pageSize);
 		}
@@ -89,4 +89,38 @@ Article.findById = function(_id,callback){
 	});
 };
 
+Article.deleteById = function(_id,callback){
+	articleModel.remove({_id:_id},function(err){
+		callback(err);
+	});
+};
+
+Article.addComment = function(_id,userId,content,callback){
+	articleModel.update({_id:_id},{$push:{comments:{userId:userId,content:content}}},function(err,ret){
+		if(err){
+			callback(err);
+		}else{
+			callback(null,ret);
+		}
+	});
+}
+
+Article.getTags = function(callback){
+	articleModel.distinct('tags',function(err,tags){
+		callback(err,tags);
+	});
+};
+
+Article.getTagArticles = function(tag,callback){
+	var query = {tags:tag};
+	articleModel.count(query,function(err,count){
+		articleModel.find(query).sort({'createTime.minute': -1}).populate('userId').exec(function(err,articles){
+			if(err){
+				callback(err);
+			}else{
+				callback(err,count,articles);
+			}
+		});
+	});
+};
 module.exports = Article;

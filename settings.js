@@ -5,4 +5,4 @@ module.exports.mongoConfig = {
     port: 27017
 };
 
-module.exports.pageSize = 2;
+module.exports.pageSize = 4;

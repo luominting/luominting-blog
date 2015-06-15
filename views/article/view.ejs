@@ -7,7 +7,7 @@
         <%-article.content%>
     </div>
     <div class="panel-footer panel-info">
-        作者:<%=article.userId.username%>发布时间:<%=article.createTime.minute%>|
+        发布时间:<%=article.createTime.minute%>|
         <%
         article.tags.forEach(function(tag){
         %><%=tag%>&nbsp;<%
@@ -15,12 +15,18 @@
         %>
     </div>
 </div>
+
+<%if(user){
+%>
 <div class="panel panel-success">
     <div class="panel-body">
         <a href="/article/edit/<%=article._id%>">编辑</a>
         <a href="/article/delete/<%=article._id%>">删除</a>
     </div>
 </div>
+<%
+}%>
+
 <%
 if(article.comments){
         article.comments.forEach(function(comment){
@@ -34,6 +40,9 @@ if(article.comments){
 <%
 });
 }
+%>
+
+<%if(user){
 %>
 <form action="/article/addComment" method="post" role="form" class="form-horizontal">
     <input type="hidden" name="_id" value="<%=article._id%>">
@@ -50,4 +59,7 @@ if(article.comments){
         </div>
     </div>
 </form>
+<%
+}%>
+
 <%- include ../include/footer%>

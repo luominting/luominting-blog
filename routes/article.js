@@ -121,4 +121,58 @@ router.post('/edit',function(req,res,next){
     });
 });
 
+router.get('/delete/:articleId', function(req,res,next){
+    Article.deleteById(req.params.articleId,function(err,article){
+        if(err){
+            req.flash('error',err);
+            return res.redirect('back');
+        }else{
+            req.flash('success','删除文章成功');
+            res.redirect('/');
+        }
+    });
+});
+
+router.post('/addComment',function(req,res,next){
+    var _id = req.body._id,
+        userId = req.body.userId,
+        content = req.body.content;
+    Article.addComment(_id,userId,content,function(err){
+        if(err){
+            req.flash('error',err);
+            return res.redirect('back');
+        }else{
+            req.flash('success','评论成功');
+            res.redirect('/article/view/'+ _id);
+        }
+    })
+});
+
+router.get('/tags',function(req,res,next){
+    Article.getTags(function(err,tags){
+        if(err){
+            next(err);
+        }else{
+            res.render('article/tags',{
+                tags:tags
+            });
+        }
+
+    });
+});
+
+router.get('/tags/:tag',function(req,res,next){
+    Article.getTagArticles(req.params.tag,function(err,count,articles){
+        if(err){
+            next(err);
+        }else{
+            res.render('index',{
+                count:count,
+                articles: articles
+            });
+        }
+    });
+});
+
+
 module.exports = router;
