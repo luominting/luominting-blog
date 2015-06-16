@@ -1,0 +1,46 @@
+body{
+    padding-top:70px;
+    background: url(/img/bg.jpg);
+}
+ul{
+	margin:0; padding:0;
+}
+ul li{
+	margin:0; padding:0;list-style:none;
+}
+a{
+    color:#353535;
+}
+.navbar{
+    background: rgba(255,255,255,.9);
+
+}
+.navbar-brand{
+    font-size: 25px;
+    font-weight: 100;
+}
+.content-box li{
+	margin-bottom:40px;
+}
+.content{
+	max-height:100px;
+	overflow:hidden;
+	margin:12px 0;
+}
+.about{
+	color:#7B838A;
+}
+
+.sign a{
+	color:#337ab7
+}
+
+.pagination-box{
+	position:relative;
+}
+.pagination{
+	position:absolute;
+	left:50%;
+	top:0;
+	transform:translate(-50%,0)
+}

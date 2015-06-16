@@ -1,6 +1,3 @@
-/**
- * Created by luominting on 15/6/11.
- */
 var mongoose = require('../db');
 var crypto = require('crypto');
 
@@ -21,14 +18,12 @@ function User(user){
 
 User.prototype.save = function(callback){
     var md5 = crypto.createHash('md5'),
-        emailMd5 = md5.update(this.email.toLowerCase()).digest('hex'),
-        avatar = 'http://secure.gravatar.com/avatar/'+emailMd5+'?s=48';
+        emailMd5 = md5.update(this.email.toLowerCase()).digest('hex'); 
 
     var newUser = new userModel({
         username: this.username,
         password: this.password,
-        email: this.email,
-        avatar: avatar
+        email: this.email
     });
 
     newUser.save(function(err,user){

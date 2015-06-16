@@ -33,26 +33,36 @@
 <nav class="pagination-box">
     <ul class="pagination">
         <%
-          var num =0;
+            var num =0;
             if(pageNum %5==0){
                 num = pageNum/5 -1;
             }else{
                 num = Math.floor(pageNum/5);
             }
             var start = num *5+1;
-            var end = start + 4>totalPage?totalPage:start+4;
+            var end = start + 4 > totalPage ? totalPage : start+4;
             if(start >1){
-                %><li><a href="/article/list/<%=start -1%>/<%=pageSize%>">&laquo;</a></li><%
+        %>   
+            <li>
+                <a href="/article/list/<%=start -1%>">&laquo;</a>
+            </li>
+        <%
             }
             for(var i=start;i<=end;i++){
         %>
-        <li><a href="/article/list/<%=i%>/<%=pageSize%>"><%=i%></a></li>
+            <li>
+                <a href="/article/list/<%=i%>/"><%=i%></a>
+            </li>
         <%
-        }
-        if(totalPage>end){
-        %><li><a href="/article/list/<%=end +1%>/<%=pageSize%>">&raquo;</a></li><%
-        }
-         %>
+            }
+            if(totalPage>end){
+        %>
+            <li>
+                <a href="/article/list/<%=end +1%>">&raquo;</a>
+            </li>
+        <%
+            }
+        %>
     </ul>
 </nav>
 <%- include include/footer.ejs%>

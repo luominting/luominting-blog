@@ -3,9 +3,8 @@ var router = express.Router();
 var User = require('../model/User');
 var crypto = require('crypto');
 
-/* GET users listing. */
 router.get('/reg', function(req, res, next) {
-  res.render('user/reg',res.locals);
+  res.render('user/reg');
 });
 
 router.post('/reg', function(req, res, next) {

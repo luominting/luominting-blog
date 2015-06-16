@@ -11,6 +11,7 @@ router.get('/add', function(req, res, next) {
     });
 });
 
+//发表文章
 router.post('/add',function(req,res, next){
     var title = req.body.title,
     	content = req.body.content,
@@ -19,13 +20,11 @@ router.post('/add',function(req,res, next){
     	ts = DateUtil.getTime();
     	
     if(!title){
-    	req.flash('error','请输入标题');
-    	return res.redirect('back');
+        return res.json({code:0,msg:"请输入标题!"});
     }
 
     if(!content){
-    	req.flash('error','内容不能为空哦！');
-    	return res.redirect('back');
+        return res.json({code:1,msg:"内容不能为空哦！"});
     }
 
     var newArticle = new Article({
@@ -38,21 +37,20 @@ router.post('/add',function(req,res, next){
     });
 
     newArticle.save(function(err,article){
+        console.log('enter');
     	if(err){
-    		req.flash('error','发表失败，请重试！');
     		return res.redirect('back');
     	}else{
-    		req.flash('success','发表成功');
-    		res.redirect('/');
+            res.json({code:2,msg:"发表成功!"});
     	}
     });
 });
 
-router.get('/list/:pageNum/:pageSize',function(req,res,next){
+//文章列表
+router.get('/list/:pageNum',function(req,res,next){
     var num = req.params.pageNum;
-    var size = req.params.pageSize;
     var pageNum = num && num > 0 ? parseInt(num) : 1;
-    var pageSize = size && size > 0 ? parseInt(size) : settings.pageSize;
+    var pageSize = settings.pageSize;
     var query = {};
     var searchBtn = req.query.searchBtn;
     if(searchBtn){

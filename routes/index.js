@@ -4,7 +4,7 @@ var settings = require('../settings');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('/article/list/1/'+settings.pageSize);
+  res.redirect('/article/list/1');
 });
 
 module.exports = router;

@@ -1,5 +1,4 @@
 var mongoose = require('../db');
-var markdown = require('markdown').markdown;
 
 var CommentSchema = new mongoose.Schema({
 	userId: {type:mongoose.Schema.ObjectId,ref:'User'},
@@ -81,7 +80,6 @@ Article.findById = function(_id,callback){
 		if(err){
 			return callback(err);
 		}else{
-			article.content = markdown.toHTML(article.content);
 			articleModel.update({_id:_id},{$inc:{'pv':1}},function(err){
 				callback(err,article);
 			});
@@ -89,12 +87,14 @@ Article.findById = function(_id,callback){
 	});
 };
 
+//删除文章
 Article.deleteById = function(_id,callback){
 	articleModel.remove({_id:_id},function(err){
 		callback(err);
 	});
 };
 
+//增加文章
 Article.addComment = function(_id,userId,content,callback){
 	articleModel.update({_id:_id},{$push:{comments:{userId:userId,content:content}}},function(err,ret){
 		if(err){

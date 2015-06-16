@@ -1,0 +1,11 @@
+<%- include ../include/header%>
+<ul class="list-group">
+    <%
+    tags.forEach(function(tag){
+    %>
+    <a href="/article/tags/<%=tag%>"><%=tag%></a>&nbsp;
+    <%
+    });
+    %>
+</ul>
+<%- include ../include/footer%>
